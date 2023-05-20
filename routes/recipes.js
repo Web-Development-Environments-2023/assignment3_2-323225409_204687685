@@ -17,4 +17,16 @@ router.get("/:recipeId", async (req, res, next) => {
   }
 });
 
+
+
+router.get("/:searchRecipes", async (req, res, next) => {
+  try {
+    
+  } catch (error) {
+    
+  }
+});
+
+
+
 module.exports = router;
