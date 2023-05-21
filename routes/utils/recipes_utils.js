@@ -141,6 +141,23 @@ async function getTotalRecipeInfo(userId, recipeId) {
 
 
 
+async function get3randomRecipe() {
+    const random_pool = await getRandomRecipes();
+    const filtered_random_pool = random_pool.data.recipes.filter(
+      (random) => random.instructions && random.image
+    );
+  
+    if (filtered_random_pool.length < 3) {
+      return getRandomThreeRecipes();
+    }
+  
+    const preview_recipe_details = extractPreviewRecipeDetails(
+      filtered_random_pool.slice(0, 3)
+    );
+  
+    return preview_recipe_details;
+}
+
 
 
 exports.getRecipeDetails = getRecipeDetails;
