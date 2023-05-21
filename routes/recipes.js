@@ -18,12 +18,20 @@ router.get("/:recipeId", async (req, res, next) => {
 });
 
 
+//___________________________we implemented_______________________________________________
 
-router.get("/:searchRecipes", async (req, res, next) => {
+//number of recipes that came back, sort the results, cuisine and diet types, intolerance kinds
+//frome here we will send it to utils the ask from the api
+
+router.get("/searchRecipes", async (req, res, next) => {
+  const query = req.query;
   try {
-    
+    let recipe_search = await recipes_utils.getSearchRecipe(query.query, query.amount, query.cuisine, query.diet, query.intolerance, query.sort);
+    res.send(recipe_search);
   } catch (error) {
-    
+    next(error);
+    // console.log(error);
+    // res.sendStatus(404);
   }
 });
 
