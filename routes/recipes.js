@@ -23,7 +23,7 @@ router.get("/:recipeId", async (req, res, next) => {
 //number of recipes that came back, sort the results, cuisine and diet types, intolerance kinds
 //frome here we will send it to utils the ask from the api
 
-router.get("/searchRecipes", async (req, res, next) => {
+router.get("gusts/searchRecipes", async (req, res, next) => {
   const query = req.query;
   try {
     let recipe_search = await recipes_utils.getSearchRecipe(query.query, query.amount, query.cuisine, query.diet, query.intolerance, query.sort);
@@ -35,6 +35,21 @@ router.get("/searchRecipes", async (req, res, next) => {
   }
 });
 
+
+
+//this func get all the details of the recipe and send it to the client
+router.get("/getTotalRecipeInfo/:recipe_id", async (req, res, next) => {
+  const sess = req.session;
+  try {
+    const userId = sess.user_id;
+    const recipe_info_to_return = await recipes_utils.getTotalRecipeInfo(userId,req.params.recipeId);
+
+  } catch (error) {
+    next(error);
+    // console.log(error);
+    // res.sendStatus(404);
+  }
+});
 
 
 module.exports = router;
