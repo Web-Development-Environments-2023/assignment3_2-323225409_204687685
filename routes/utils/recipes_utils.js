@@ -115,6 +115,7 @@ async function getTotalRecipeInfo(userId, recipeId) {
           servings,
         },
       } = recipe_info;
+      
 
     let recipe_ingredients_list = extendedIngredients.map(({ name, amount }) => ({ name, amount })); //append to the list all ingredients of the recipe and how much we need
     
