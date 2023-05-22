@@ -9,6 +9,19 @@ async function getFavoriteRecipes(user_id){
     return recipes_id;
 }
 
+async function checkIfFavorite(userID,recID){// this function checks if the recipe exist in user favorite recipes if not returns false.
+    const query = `SELECT recipe_id FROM favoriteRecipes WHERE user_id = '${userID}' AND recipe_id = '${recID}'`;
+    const recipes = await DButils.execQuery(query);
+    return recipes.length > 0;
+}
+
+async function checkIfWatched(userID,recID){//this function checks if the user seen this recipe before.
+    const query = `SELECT recipe_id FROM last_recipes WHERE user_id = '${userID}' AND recipe_id = '${recID}'`;
+    const recipes = await DButils.execQuery(query);
+    return recipes.length > 0;
+}
+
+
 
 
 exports.markAsFavorite = markAsFavorite;
