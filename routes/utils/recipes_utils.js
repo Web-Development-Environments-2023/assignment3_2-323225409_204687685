@@ -9,7 +9,7 @@ const api_domain = "https://api.spoonacular.com/recipes";
  */
 
 
-async function getRecipeInformation(recipe_id) {
+async function getRecipeInformation(recipe_id) {//get the recipes information from the spooncular api
     return await axios.get(`${api_domain}/${recipe_id}/information`, {
         params: {
             includeNutrition: false,
@@ -20,7 +20,7 @@ async function getRecipeInformation(recipe_id) {
 
 
 
-async function getRecipeDetails(recipe_id) {
+async function getRecipeDetails(recipe_id) {//returns only the info we need
     let recipe_info = await getRecipeInformation(recipe_id);
     let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = recipe_info.data;
 
@@ -81,9 +81,16 @@ async function getSearchRecipe(query, amount, cuisine, diet, intolerance, sort) 
     return http_response.data;
 }
 
+async function getRecipesPreview(recipesIdsList, userId) {//gets the recipe preview
+    const promises = recipesIdsList.map((id) => getRecipeInformation(id));
+    const recipeInfoResponses = await Promise.all(promises);
+    return extractPreviewRecipeDetails(recipeInfoResponses, userId);
+  }
+
+
 
 //________________________help func___________
-async function getRecipeInfoURL(recipeID) {
+async function getRecipeInfoURL(recipeID) {///?!?!?
     return await axios.get(`${api_domain}/${recipeID}/information`, {
         params: {
             includeNutrition: false,
@@ -93,8 +100,6 @@ async function getRecipeInfoURL(recipeID) {
 }
 
 // ___________________________________________
-
-
 
 async function getTotalRecipeInfo(userId, recipeId) {
 
@@ -116,12 +121,9 @@ async function getTotalRecipeInfo(userId, recipeId) {
         },
       } = recipe_info;
       
-
     let recipe_ingredients_list = extendedIngredients.map(({ name, amount }) => ({ name, amount })); //append to the list all ingredients of the recipe and how much we need
-    
-    
-    let if_recipe_exist_in_user_favorites = await  user_utils.checkIsFavorite(user_id,id); //??????????????
-    let if_recipe_watched_by_user =  await user_utils.checkIsWatched(user_id,id); //??????????
+    let if_recipe_exist_in_user_favorites = await  user_utils.checkIfFavorite(user_id,id); //??????????????
+    let if_recipe_watched_by_user =  await user_utils.checkIfWatched(user_id,id); //??????????
     return {
         id: id,
         title: title,
@@ -141,8 +143,86 @@ async function getTotalRecipeInfo(userId, recipeId) {
 }
 
 
+async function getPreviewDetails(recipesInfo,userId){//get the needed detailes for preview
+    return await Promise.all(
+        recipesInfo.map(async (recipeInfo) => {
+          let data = recipeInfo;
+          if (recipeInfo.data) {
+            data = recipeInfo.data;
+          }
+          const { 
+            id, 
+            title, 
+            readyInMinutes, 
+            image, 
+            aggregateLikes, 
+            vegan, 
+            vegetarian, 
+            glutenFree, 
+            servings 
+          } = data;
 
-async function get3randomRecipe() {
+          let if_recipe_exist_in_user_favorites = await userUtils.checkIfFavorite(userId, id);
+          let if_recipe_watched_by_user = await userUtils.checkIfWatched(userId, id);
+          return {
+            id: id,
+            title: title,
+            readyInMinutes: readyInMinutes,
+            image: image,
+            aggregateLikes: aggregateLikes,
+            vegan: vegan,
+            vegetarian: vegetarian,
+            glutenFree: glutenFree,
+            if_recipe_exist_in_user_favorites: if_recipe_exist_in_user_favorites,
+            if_recipe_watched_by_user: if_recipe_watched_by_user,
+            servings: servings,
+          };
+        })
+      );
+}
+
+
+async function searchWithFilters(query, amount, cuisine, diet, intolerance, sort,userId,count){//make the search with user filters.
+    const recipeCount = num || 5;
+    let searchResults = await getRecipesFromSearch(query, amount, cuisine, diet, intolerance, sort);/////name
+    let filteredSearchResults = searchResults.results.filter((result) => {
+        return result.analyzedInstructions.length !== 0;
+      });
+
+    if (filteredSearchResults.length < amount - count && searchResults.totalResults >= amount) {
+        counter++;
+        return searchWithFilters(query, amount + 1, cuisine, diet, intolerance, sort, userId, count);
+    }
+
+
+    if (filteredResults.length < recipeCount - count && searchResults.totalResults >= recipeCount) {
+        count++;
+        return getFilteredSearchRecipes(
+          query,
+          recipeCount + 1,
+          cuisine,
+          diet,
+          intolerance,
+          sorting,
+          sort,
+          count
+        );
+      }
+    return getPreviewDetails(filteredSearchResults, userId);
+
+
+}
+async function getRandomRecipes() {// returns 10 random recipes 
+    const response = await axios.get(`${api_domain}/random`,{
+        params: {
+            number:10,
+            apiKey: process.env.spooncular_apiKey
+        }
+    });
+    return response;
+}
+
+async function get3randomRecipe() {// gets the 10 random recipes and select the first 3 that meet the criterias
     const random_pool = await getRandomRecipes();
     const filtered_random_pool = random_pool.data.recipes.filter(
       (random) => random.instructions && random.image
@@ -161,7 +241,9 @@ async function get3randomRecipe() {
 
 
 
+
 exports.getRecipeDetails = getRecipeDetails;
 
+//???????
 
 
