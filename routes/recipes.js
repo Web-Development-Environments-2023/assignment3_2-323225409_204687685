@@ -23,7 +23,7 @@ router.get("/:recipeId", async (req, res, next) => {
 //number of recipes that came back, sort the results, cuisine and diet types, intolerance kinds
 //frome here we will send it to utils the ask from the api
 
-router.get("gusts/searchRecipes", async (req, res, next) => {
+router.get("/searchRecipes", async (req, res, next) => { //maybe need guest before "/"
   const query = req.query;
   try {
     let recipe_search = await recipes_utils.getSearchRecipe(query.query, query.amount, query.cuisine, query.diet, query.intolerance, query.sort);
