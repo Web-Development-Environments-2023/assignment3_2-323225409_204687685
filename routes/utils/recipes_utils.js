@@ -3,6 +3,12 @@ const api_domain = "https://api.spoonacular.com/recipes";
 
 
 
+const MySql = require("../routes/utils/MySql");
+const DButils = require("../routes/utils/DButils");
+const user_utils = require("./utils/user_utils");
+const recipe_utils = require("./utils/recipes_utils");
+
+
 /**
  * Get recipes list from spooncular response and extract the relevant recipe data for preview
  * @param {*} recipes_info 
@@ -143,6 +149,7 @@ async function getTotalRecipeInfo(userId, recipeId) {
 }
 
 
+//this func is for requirment 1
 async function getPreviewDetails(recipesInfo,userId){//get the needed detailes for preview
     return await Promise.all(
         recipesInfo.map(async (recipeInfo) => {
@@ -212,6 +219,7 @@ async function searchWithFilters(query, amount, cuisine, diet, intolerance, sort
 
 
 }
+
 async function getRandomRecipes() {// returns 10 random recipes 
     const response = await axios.get(`${api_domain}/random`,{
         params: {
@@ -247,3 +255,5 @@ exports.getRecipeDetails = getRecipeDetails;
 //???????
 
 
+
+exports.getRecipesPreview = getRecipesPreview;

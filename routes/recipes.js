@@ -18,7 +18,7 @@ router.get("/:recipeId", async (req, res, next) => {
 });
 
 
-//___________________________we implemented_______________________________________________
+//___________________________we implemented______only server connections_________________________________________
 
 //number of recipes that came back, sort the results, cuisine and diet types, intolerance kinds
 //frome here we will send it to utils the ask from the api
