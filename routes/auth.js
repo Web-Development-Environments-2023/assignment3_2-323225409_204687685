@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
-const MySql = require("../routes/utils/MySql");
-const DButils = require("../routes/utils/DButils");
+const MySql = require("./utils/MySql");
+const DButils = require("./utils/DButils");
 const bcrypt = require("bcrypt");
 
 router.post("/Register", async (req, res, next) => {
@@ -25,13 +25,13 @@ router.post("/Register", async (req, res, next) => {
       throw { status: 409, message: "Username taken" };
 
     // add the new username
-    let hash_password = bcrypt.hashSync(
-      user_details.password,
-      parseInt(process.env.bcrypt_saltRounds)
-    );
+    // let hash_password = bcrypt.hashSync(
+    //   user_details.password,
+    //   parseInt(process.env.bcrypt_saltRounds)
+    // );
     await DButils.execQuery(
-      `INSERT INTO users VALUES ('${user_details.username}', '${user_details.firstname}', '${user_details.lastname}',
-      '${user_details.country}', '${hash_password}', '${user_details.email}')`
+      `INSERT INTO users VALUES ('${userID}','${user_details.username}', '${user_details.firstname}', '${user_details.lastname}',
+      '${user_details.country}', '${user_details.password}', '${user_details.email}')`
     );
     res.status(201).send({ message: "user created", success: true });
   } catch (error) {

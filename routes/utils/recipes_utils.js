@@ -3,10 +3,10 @@ const api_domain = "https://api.spoonacular.com/recipes";
 
 
 
-const MySql = require("../routes/utils/MySql");
-const DButils = require("../routes/utils/DButils");
-const user_utils = require("./utils/user_utils");
-const recipe_utils = require("./utils/recipes_utils");
+const MySql = require("../utils/MySql");
+const DButils = require("../utils/DButils");
+const user_utils = require("./user_utils");
+const recipe_utils = require("./recipes_utils");
 
 
 /**
