@@ -95,21 +95,11 @@ async function getRecipesPreview(recipesIdsList, userId) {//gets the recipe prev
 
 
 
-//________________________help func___________
-async function getRecipeInfoURL(recipeID) {///?!?!?
-    return await axios.get(`${api_domain}/${recipeID}/information`, {
-        params: {
-            includeNutrition: false,
-            apiKey: process.env.spooncular_apiKey
-        }
-    });
-}
-
 // ___________________________________________
 
 async function getTotalRecipeInfo(userId, recipeId) {
 
-    let all_recipe_info = await getRecipeInfoURL(recipeId);
+    let all_recipe_info = await getRecipeInformation(recipeId);
 
     let { //save from API all the needed info for the recipe 
         data: {
@@ -125,11 +115,11 @@ async function getTotalRecipeInfo(userId, recipeId) {
           extendedIngredients,
           servings,
         },
-      } = recipe_info;
+      } = all_recipe_info.data;
       
     let recipe_ingredients_list = extendedIngredients.map(({ name, amount }) => ({ name, amount })); //append to the list all ingredients of the recipe and how much we need
-    let if_recipe_exist_in_user_favorites = await  user_utils.checkIfFavorite(user_id,id); //??????????????
-    let if_recipe_watched_by_user =  await user_utils.checkIfWatched(user_id,id); //??????????
+    let if_recipe_exist_in_user_favorites = await  user_utils.checkIfFavorite(userId,id); //??????????????
+    let if_recipe_watched_by_user =  await user_utils.checkIfWatched(userId,id); //??????????
     return {
         id: id,
         title: title,
