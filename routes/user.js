@@ -14,12 +14,9 @@ router.get("/", (req, res) => res.send("im in user"));
  * Authenticate all incoming requests by middleware
  */
 router.use(async function (req, res, next) {
-  console.log("$$$$$$$$$$$")
-  console.log(req.session)
-  console.log(req.session.user_id)
-  console.log("############")
+
   if (req.session && req.session.user_id) {
-    DButils.execQuery("SELECT userID FROM users").then((users) => {
+    DButils.execQuery("SELECT user_id FROM users").then((users) => {
       if (users.find((x) => x.user_id === req.session.user_id)) {
         req.user_id = req.session.user_id;
         next();
@@ -39,7 +36,7 @@ router.post('/favorites', async (req,res,next) => {
     const user_id = req.session.user_id; 
     const recipe_id = req.body.recipe_id;
     let recipes_ids = [];
-    recipes_ids = await DButils.execQuery(`SELECT recipeID from favoriterecipes where userID='${user_id}'`);
+    recipes_ids = await DButils.execQuery(`SELECT recipe_id from favoriterecipes where user_id='${user_id}'`);
     if (!(recipes_ids.find((x) => x.recipe_id === recipe_id))){
       await user_utils.markAsFavorite(user_id,recipe_id);
       res.status(200).send("The Recipe successfully saved as favorite");
