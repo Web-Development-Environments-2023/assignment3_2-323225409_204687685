@@ -30,14 +30,15 @@ router.post("/Register", async (req, res, next) => {
       throw { status: 409, message: "Username taken" };
 
     // add the new username
-    // let hash_password = bcrypt.hashSync(
-    //   user_details.password,
-    //   parseInt(process.env.bcrypt_saltRounds)
-    // );
+    let hash_password = bcrypt.hashSync(
+      user_details.password,
+      parseInt(process.env.bcrypt_saltRounds)
+    );
     await DButils.execQuery(
       `INSERT INTO users (username,firstname,lastname,country,password,email) VALUES ('${user_details.username}', '${user_details.firstname}', '${user_details.lastname}',
-      '${user_details.country}', '${user_details.password}', '${user_details.email}')`
+      '${user_details.country}', '${hash_password}', '${user_details.email}')`
     );
+    await DButils.commit();
     // await DButils.execQuery( original
     //   `INSERT INTO users VALUES ('${user_details.username}', '${user_details.firstname}', '${user_details.lastname}',
     //   '${user_details.country}', '${user_details.password}', '${user_details.email}', '${user_details.profilePic}')`
@@ -62,8 +63,10 @@ router.post("/Login", async (req, res, next) => {
       )
     )[0];
 
-    // if (!bcrypt.compareSync(req.body.password, user.password)) {original
-    if (!(req.body.password)) {
+    if (!bcrypt.compareSync(req.body.password, user.password)) {
+      console.log("body" + req.body.password)
+      console.log("user" + user.password)
+    // if (!(req.body.password)) {
       throw { status: 401, message: "Username or Password incorrect2" };
     }
 
