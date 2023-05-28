@@ -3,7 +3,9 @@ var router = express.Router();
 const DButils = require("./utils/DButils");
 const user_utils = require("./utils/user_utils");
 const recipe_utils = require("./utils/recipes_utils");
-
+const app = express();
+const port = process.env.PORT || "3000";
+app.use(express.json()); 
 /**
  * Authenticate all incoming requests by middleware
  */
@@ -26,12 +28,17 @@ router.use(async function (req, res, next) {
  */
 router.post('/favorites', async (req,res,next) => {
   try{
-    const user_id = req.session.user_id;
-    const recipe_id = req.body.recipeId;
-    await user_utils.markAsFavorite(user_id,recipe_id);
-    res.status(200).send("The Recipe successfully saved as favorite");
+    const user_id = req.session.user_id; 
+    const recipe_id = req.body.recipe_id;
+    let recipes_ids = [];
+    recipes_ids = await DButils.execQuery(`SELECT recipeID from favoriterecipes where userID='${user_id}'`);
+    if (!(recipes_ids.find((x) => x.recipe_id === recipe_id))){
+      await user_utils.markAsFavorite(user_id,recipe_id);
+      res.status(200).send("The Recipe successfully saved as favorite");
+    }
+  
     } catch(error){
-    next(error);
+      next(error);
   }
 })
 
