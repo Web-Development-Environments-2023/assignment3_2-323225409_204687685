@@ -1,5 +1,6 @@
 const axios = require("axios");
 const api_domain = "https://api.spoonacular.com/recipes";
+// require('dotenv').config();
 
 
 
@@ -15,14 +16,17 @@ const recipe_utils = require("./recipes_utils");
  */
 
 
-async function getRecipeInformation(recipe_id) {//get the recipes information from the spooncular api
+async function getRecipeInformation(recipe_id) {
+  console.log("im here")//get the recipes information from the spooncular api
     return await axios.get(`${api_domain}/${recipe_id}/information`, {
         params: {
             includeNutrition: false,
             apiKey: process.env.spooncular_apiKey
+            
+           
         }
     });
-}
+} 
 
 
 
@@ -90,7 +94,7 @@ async function getSearchRecipe(query, amount, cuisine, diet, intolerance, sort) 
 async function getRecipesPreview(recipesIdsList, userId) {//gets the recipe preview
     const promises = recipesIdsList.map((id) => getRecipeInformation(id));
     const recipeInfoResponses = await Promise.all(promises);
-    return extractPreviewRecipeDetails(recipeInfoResponses, userId);
+    return getPreviewDetails(recipeInfoResponses, userId);
   }
 
 
@@ -159,8 +163,8 @@ async function getPreviewDetails(recipesInfo,userId){//get the needed detailes f
             servings 
           } = data;
 
-          let if_recipe_exist_in_user_favorites = await userUtils.checkIfFavorite(userId, id);
-          let if_recipe_watched_by_user = await userUtils.checkIfWatched(userId, id);
+          let if_recipe_exist_in_user_favorites = await user_utils.checkIfFavorite(userId, id);
+          let if_recipe_watched_by_user = await user_utils.checkIfWatched(userId, id);
           return {
             id: id,
             title: title,

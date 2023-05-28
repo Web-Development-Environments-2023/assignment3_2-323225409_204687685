@@ -32,3 +32,5 @@ async function checkIfWatched(user_id,recipe_id){//this function checks if the u
 
 exports.markAsFavorite = markAsFavorite;
 exports.getFavoriteRecipes = getFavoriteRecipes;
+exports.checkIfFavorite =checkIfFavorite;
+exports.checkIfWatched = checkIfWatched
