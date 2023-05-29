@@ -104,9 +104,10 @@ async function getRecipesPreview(recipesIdsList, userId) {//gets the recipe prev
 async function getTotalRecipeInfo(userId, recipeId) {
 
     let all_recipe_info = await getRecipeInformation(recipeId);
+    console.log(all_recipe_info)
 
     let { //save from API all the needed info for the recipe 
-        data: {
+        
           id,
           title,
           readyInMinutes,
@@ -118,7 +119,7 @@ async function getTotalRecipeInfo(userId, recipeId) {
           analyzedInstructions,
           extendedIngredients,
           servings,
-        },
+        
       } = all_recipe_info.data;
       
     let recipe_ingredients_list = extendedIngredients.map(({ name, amount }) => ({ name, amount })); //append to the list all ingredients of the recipe and how much we need
@@ -247,7 +248,7 @@ async function get3randomRecipe() {// gets the 10 random recipes and select the 
 exports.getRecipeDetails = getRecipeDetails;
 
 //???????
-
+exports.getTotalRecipeInfo = getTotalRecipeInfo;
 
 
 exports.getRecipesPreview = getRecipesPreview;

@@ -41,8 +41,10 @@ router.get("/searchRecipes", async (req, res, next) => { //maybe need guest befo
 router.get("/totalRecipeInfo/:recipe_id", async (req, res, next) => {
   const sess = req.session;
   try {
+    console.log("in totalrecipeinfo")
     const userId = sess.user_id;
-    const recipe_info_to_return = await recipes_utils.getTotalRecipeInfo(userId,req.params.recipeId);
+    const recipe_info_to_return = await recipes_utils.getTotalRecipeInfo(userId,req.params.recipe_id);
+    res.send(recipe_info_to_return);
 
   } catch (error) {
     next(error);
