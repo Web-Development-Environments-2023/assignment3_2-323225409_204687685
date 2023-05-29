@@ -14,9 +14,6 @@ router.get("/", (req, res) => res.send("im in user"));
  * Authenticate all incoming requests by middleware
  */
 router.use(async function (req, res, next) {
- 
-  //debugger;
-
   if (req.session && req.session.user_id) {
     DButils.execQuery("SELECT user_id FROM users").then((users) => {
       if (users.find((x) => x.user_id === req.session.user_id)) {
@@ -35,10 +32,8 @@ router.use(async function (req, res, next) {
  */
 router.post('/favorites', async (req,res,next) => {
   try{
-    //console.log(req.session.user_id)
     const user_id = req.session.user_id; 
     const recipe_id = req.body.recipe_id;
-    //console.log(recipe_id)
     let recipes_ids = [];
     recipes_ids = await DButils.execQuery(`SELECT recipe_id from favoriterecipes where user_id='${user_id}'`);
     if (!(recipes_ids.find((x) => x.recipe_id === recipe_id))){
@@ -57,7 +52,6 @@ router.post('/favorites', async (req,res,next) => {
 router.get('/favorites', async (req,res,next) => {
   try{
     const user_id = req.session.user_id;
-    // console.log(req.session.user_id)
     let favorite_recipes = {};
     const recipes_id = await user_utils.getFavoriteRecipes(user_id); //all good
     let recipes_id_array = [];
@@ -72,12 +66,10 @@ router.get('/favorites', async (req,res,next) => {
 
 // ____________________________we added_______________________________________________
 
-router.post('/lastseen', async (req,res,next) => {
+router.post('/lastseen', async (req,res,next) => {//add recipe to the last seen recipes of user
   try{
-    //console.log(req.session.user_id)
     const user_id = req.session.user_id; 
     const recipe_id = req.body.recipe_id;
-    //console.log(recipe_id)
     let recipes_ids = [];
     recipes_ids = await DButils.execQuery(`SELECT recipe_id from lastrecipes where user_id='${user_id}'`);
     if (!(recipes_ids.find((x) => x.recipe_id === recipe_id))){
@@ -90,7 +82,7 @@ router.post('/lastseen', async (req,res,next) => {
   }
 })
 
-router.get('/lastseen', async (req,res,next) => {
+router.get('/lastseen', async (req,res,next) => { //shows all last seen recipes of user
   try{
     const user_id = req.session.user_id;
     // console.log(req.session.user_id)
@@ -105,9 +97,42 @@ router.get('/lastseen', async (req,res,next) => {
   }
 });
 
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+router.get('/familyRecipes', async (req,res,next) =>{ ////get all family recipes of logged in given user
+  try{
+    const user_id = req.session.user_id;
+    const recipe_id = req.body.recipe_id
+    const famRecipes = await user_utils.getFamilyRecipes(user_id, recipe_id);
+    res.status(200).send(famRecipes);
+  }
+  catch(error){
+    next(error)
+  }
+})
 
+router.post('/familyRecipes', async (req,res,next) => { //this function will add a new family recipe of logged in user
+  try{
+    let recipe_details = {
+      user_id: req.session.user_id,
+      recipe_title: req.body.recipe_title,
+      recipe_of: req.body.recipe_of,
+      time: req.body.time,
+      ingredients:req.body.ingredients,
+      instructions: req.body.instructions,
+      when_prepared: req.body.when_prepared,
+      recipe_photo:req.body.recipe_photo
+    }
 
+    const fullFamilyRecipe = await user_utils.insertFamilyRecipe(recipe_details);
+    res.status(201).send({ message: "recipe created", success: true });
+
+  }
+  catch(error){
+    next(error)
+  }
+
+})
 
 module.exports = router;
 

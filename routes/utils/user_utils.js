@@ -1,4 +1,6 @@
 const DButils = require("./DButils");
+// import { execQuery } from "./DButils"; maybe convert the require
+
 
 async function markAsFavorite(user_id, recipe_id){
     let recipesList = [];
@@ -45,6 +47,57 @@ async function checkIfWatched(user_id,recipe_id){//this function checks if the u
 }
 
 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+async function getFamilyRecipes(user_id, recipe_id){ //get all family recipes of logged in given user
+    // let totalRecipe = []
+    // let famRecipsList = [] ;
+    // let ingrediantsList ;
+    // query = `SELECT * FROM familyrecipes WHERE user_id='${user_id}'`;
+    // query2 = `SELECT name, amount FROM ingredients WHERE user_id='${user_id}' AND recipe_id = '${recipe_id}'`;
+    // famRecipsList = await DButils.execQuery(query);
+    // ingrediantsList = await DButils.execQuery(query2);
+    // famRecipsList.push(ingrediantsList);
+    // totalRecipe.push(famRecipsList);
+    // return totalRecipe;
+    let famRecipsList = [];
+    query = `SELECT * FROM familyrecipes WHERE user_id='${user_id}'`;
+    famRecipsList = await DButils.execQuery(query);
+
+    for (const recipe of famRecipsList) {
+        let ingredientsQuery = `SELECT name, amount FROM ingredients WHERE user_id='${user_id}' AND recipe_id='${recipe.recipe_id}'`;
+        let ingredientsList = await DButils.execQuery(ingredientsQuery);
+        recipe.ingredients = ingredientsList;
+    }
+
+    return famRecipsList;
+}
+
+async function insertFamilyRecipe(recipe_details){
+
+    let recipes_titles = []; //we check if we already have this recipe in DB
+    recipes_titles = await DButils.execQuery(`SELECT recipe_title from familyrecipes WHERE user_id = '${recipe_details.user_id}'`);
+    if (recipes_titles.find((x) => x.recipe_title === recipe_details.recipe_title))
+      throw { status: 409, message: "recipe title already exist" };
+
+    // add the new recipe
+    await DButils.execQuery(
+      `INSERT INTO familyrecipes(user_id,recipe_title,recipe_of,time,instructions,when_prepared, recipe_photo) VALUES 
+      ( '${recipe_details.user_id}','${recipe_details.recipe_title}','${recipe_details.recipe_of}', '${recipe_details.time}', 
+        '${recipe_details.instructions}', '${recipe_details.when_prepared}','${recipe_details.recipe_photo}')`
+    );
+
+
+    let recipes_id = [];
+    recipes_id = await DButils.execQuery(`SELECT MAX(recipe_id) as recipe_id from familyrecipes`);
+
+
+    await recipe_details.ingredients.map((element) => DButils.execQuery(
+      `INSERT INTO ingredients VALUES ('${recipe_details.user_id}','${recipes_id[0].recipe_id}', '${element.name}','${element.amount}')`
+    ));
+
+    return recipe_details;
+
+}
 
 
 exports.markAsFavorite = markAsFavorite;
@@ -53,7 +106,8 @@ exports.getFavoriteRecipes = getFavoriteRecipes;
 exports.checkIfFavorite =checkIfFavorite;
 exports.checkIfWatched = checkIfWatched;
 exports.getlastseenRecipes = getlastseenRecipes;
-
+exports.getFamilyRecipes = getFamilyRecipes;
+exports.insertFamilyRecipe = insertFamilyRecipe;
 
 
 

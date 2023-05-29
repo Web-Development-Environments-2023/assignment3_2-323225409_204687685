@@ -29,8 +29,7 @@ router.get("/random3recipes", async (req, res, next) => {
 
 router.get("/searchRecipes", async (req, res, next) => { 
   const query = req.query;
-  console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-  console.log("query")
+
   try {
     let recipe_search = await recipes_utils.searchWithFilters(query.query, query.amount, query.cuisine, query.diet, query.intolerance, query.sort);
     res.send(recipe_search);
@@ -47,7 +46,6 @@ router.get("/searchRecipes", async (req, res, next) => {
 router.get("/totalRecipeInfo/:recipe_id", async (req, res, next) => {
   const sess = req.session;
   try {
-    console.log("in totalrecipeinfo")
     const userId = sess.user_id;
     const recipe_info_to_return = await recipes_utils.getTotalRecipeInfo(userId,req.params.recipe_id);
     res.send(recipe_info_to_return);
@@ -58,10 +56,6 @@ router.get("/totalRecipeInfo/:recipe_id", async (req, res, next) => {
     // res.sendStatus(404);
   }
 });
-
-
-
-
 
 
 
