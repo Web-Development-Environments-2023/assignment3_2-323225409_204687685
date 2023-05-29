@@ -233,10 +233,10 @@ async function get3randomRecipe() {// gets the 10 random recipes and select the 
     );
   
     if (filtered_random_pool.length < 3) {
-      return getRandomThreeRecipes();
+      return get3randomRecipe();
     }
   
-    const preview_recipe_details = extractPreviewRecipeDetails(
+    const preview_recipe_details = getPreviewDetails(
       filtered_random_pool.slice(0, 3)
     );
   
@@ -255,3 +255,7 @@ exports.getTotalRecipeInfo = getTotalRecipeInfo;
 exports.getRecipesPreview = getRecipesPreview;
 exports.getSearchRecipe = getSearchRecipe;
 exports.searchWithFilters = searchWithFilters;
+exports.get3randomRecipe = get3randomRecipe;
+exports.getRandomRecipes = getRandomRecipes;
+exports.getPreviewDetails = getPreviewDetails;
+// exports.get3randomRecipe = get3randomRecipe;
