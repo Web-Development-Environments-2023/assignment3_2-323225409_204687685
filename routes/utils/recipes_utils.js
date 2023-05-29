@@ -59,26 +59,27 @@ async function getSearchRecipe(query, amount, cuisine, diet, intolerance, sort) 
     let user_search_url= `${api_domain}/complexSearch/?`
 
     if(query !== undefined){
-        user_search_url = search_url + `&query=${query}`
+        user_search_url = user_search_url + `&query=${query}`
+        
     }
     if(cuisine !== undefined){
-        user_search_url = search_url + `&cuisine=${cuisine}`
+        user_search_url = user_search_url + `&cuisine=${cuisine}`
     }
     if(diet !== undefined){
-        user_search_url = search_url + `&diet=${diet}`
+        user_search_url = user_search_url + `&diet=${diet}`
     }
     if(intolerance !== undefined){
-        user_search_url = search_url + `&intolerance=${intolerance}`
+        user_search_url = user_search_url + `&intolerance=${intolerance}`
     }
 
     if(sort !== undefined){
-        user_search_url = search_url + `&sort=${sort}`
+        user_search_url = user_search_url + `&sort=${sort}`
     }
 
-    user_search_url = search_url + `&instructionsRequired=true&addRecipeInformation=true` 
+    user_search_url = user_search_url + `&instructionsRequired=true&addRecipeInformation=true` 
 
     if(amount !== undefined){
-        user_search_url = search_url + `&number=${amount}`
+        user_search_url = user_search_url + `&number=${amount}`
     }
 
 
@@ -185,19 +186,19 @@ async function getPreviewDetails(recipesInfo,userId){//get the needed detailes f
 
 
 async function searchWithFilters(query, amount, cuisine, diet, intolerance, sort,userId,count){//make the search with user filters.
-    const recipeCount = num || 5;
-    let searchResults = await getRecipesFromSearch(query, amount, cuisine, diet, intolerance, sort);/////name
+    const recipeCount = amount || 5;
+    let searchResults = await getSearchRecipe(query, amount, cuisine, diet, intolerance, sort);/////name
     let filteredSearchResults = searchResults.results.filter((result) => {
         return result.analyzedInstructions.length !== 0;
       });
 
     if (filteredSearchResults.length < amount - count && searchResults.totalResults >= amount) {
-        counter++;
+        count++;
         return searchWithFilters(query, amount + 1, cuisine, diet, intolerance, sort, userId, count);
     }
 
 
-    if (filteredResults.length < recipeCount - count && searchResults.totalResults >= recipeCount) {
+    if (filteredSearchResults.length < recipeCount - count && searchResults.totalResults >= recipeCount) {
         count++;
         return getFilteredSearchRecipes(
           query,
@@ -252,3 +253,5 @@ exports.getTotalRecipeInfo = getTotalRecipeInfo;
 
 
 exports.getRecipesPreview = getRecipesPreview;
+exports.getSearchRecipe = getSearchRecipe;
+exports.searchWithFilters = searchWithFilters;

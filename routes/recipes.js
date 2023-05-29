@@ -2,20 +2,8 @@ var express = require("express");
 var router = express.Router();
 const recipes_utils = require("./utils/recipes_utils");
 
-router.get("/", (req, res) => res.send("im here"));
+// router.get("/", (req, res) => res.send("im here"));
 
-
-/**
- * This path returns a full details of a recipe by its id
- */
-router.get("/:recipeId", async (req, res, next) => {
-  try {
-    const recipe = await recipes_utils.getRecipeDetails(req.params.recipeId);
-    res.send(recipe);
-  } catch (error) {
-    next(error);
-  }
-});
 
 
 //___________________________we implemented______only server connections_________________________________________
@@ -23,10 +11,12 @@ router.get("/:recipeId", async (req, res, next) => {
 //number of recipes that came back, sort the results, cuisine and diet types, intolerance kinds
 //frome here we will send it to utils the ask from the api
 
-router.get("/searchRecipes", async (req, res, next) => { //maybe need guest before "/"
+router.get("/searchRecipes", async (req, res, next) => { 
   const query = req.query;
+  console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+  console.log("query")
   try {
-    let recipe_search = await recipes_utils.getSearchRecipe(query.query, query.amount, query.cuisine, query.diet, query.intolerance, query.sort);
+    let recipe_search = await recipes_utils.searchWithFilters(query.query, query.amount, query.cuisine, query.diet, query.intolerance, query.sort);
     res.send(recipe_search);
   } catch (error) {
     next(error);
@@ -74,4 +64,19 @@ router.get("/random3recipes", async (req, res, next) => {
 
 
 
+/**
+ * This path returns a full details of a recipe by its id
+ */
+router.get("/:recipeId", async (req, res, next) => {
+  try {
+    const recipe = await recipes_utils.getRecipeDetails(req.params.recipeId);
+    res.send(recipe);
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+
 module.exports = router;
+
