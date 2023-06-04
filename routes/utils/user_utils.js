@@ -48,19 +48,11 @@ async function checkIfWatched(user_id,recipe_id){//this function checks if the u
 
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-async function getFamilyRecipes(user_id, recipe_id){ //get all family recipes of logged in given user
-    // let totalRecipe = []
-    // let famRecipsList = [] ;
-    // let ingrediantsList ;
-    // query = `SELECT * FROM familyrecipes WHERE user_id='${user_id}'`;
-    // query2 = `SELECT name, amount FROM ingredients WHERE user_id='${user_id}' AND recipe_id = '${recipe_id}'`;
-    // famRecipsList = await DButils.execQuery(query);
-    // ingrediantsList = await DButils.execQuery(query2);
-    // famRecipsList.push(ingrediantsList);
-    // totalRecipe.push(famRecipsList);
-    // return totalRecipe;
+async function getFamilyRecipes(user_id){ //get all family recipes of logged in given user
+   
     let famRecipsList = [];
     query = `SELECT * FROM familyrecipes WHERE user_id='${user_id}'`;
+
     famRecipsList = await DButils.execQuery(query);
 
     for (const recipe of famRecipsList) {
@@ -92,7 +84,7 @@ async function insertFamilyRecipe(recipe_details){
 
 
     await recipe_details.ingredients.map((element) => DButils.execQuery(
-      `INSERT INTO ingredients VALUES ('${recipe_details.user_id}','${recipes_id[0].recipe_id}', '${element.name}','${element.amount}')`
+      `INSERT INTO ingredients VALUES ('${recipe_details.user_id}','${"F"+recipes_id[0].recipe_id}', '${element.name}','${element.amount}')`
     ));
 
     return recipe_details;

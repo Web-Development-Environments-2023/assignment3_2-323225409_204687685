@@ -102,8 +102,8 @@ router.get('/lastseen', async (req,res,next) => { //shows all last seen recipes 
 router.get('/familyRecipes', async (req,res,next) =>{ ////get all family recipes of logged in given user
   try{
     const user_id = req.session.user_id;
-    const recipe_id = req.body.recipe_id
-    const famRecipes = await user_utils.getFamilyRecipes(user_id, recipe_id);
+    // const recipe_id = req.body.recipe_id
+    const famRecipes = await user_utils.getFamilyRecipes(user_id);
     res.status(200).send(famRecipes);
   }
   catch(error){
@@ -133,6 +133,20 @@ router.post('/familyRecipes', async (req,res,next) => { //this function will add
   }
 
 })
+
+
+
+// ~!!!!!!!!!!!!!!!!!!!!!!!!!!
+router.post('/createRecipe', async (req,res,next) => { //this function will add a new personal recipe of logged in user
+  try{
+    
+  }
+  catch(error){
+    next(error)
+  }
+
+})
+
 
 module.exports = router;
 
