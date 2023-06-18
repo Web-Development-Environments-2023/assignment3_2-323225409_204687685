@@ -92,6 +92,35 @@ async function insertFamilyRecipe(recipe_details){
 }
 
 
+
+async function createNewRecipes(recipe_details){
+
+    let recipes_names_list = [];
+    recipes_names_list = await DButils.execQuery("SELECT recipe_name from myrecipes");
+    if (recipes_names_list.find((x) => x.title === recipe_details.title))
+      throw { status: 409, message: "This recipe already exist" };
+
+    //we add the new recipe to our DB - the recipe will show on myrecipes page
+    await DButils.execQuery(
+      `INSERT INTO myrecipes(user_id,recipe_name,servings,time,image,instructions,gluten,vegan,vegetarian) VALUES 
+      ( '${recipe_details.user_id}','${recipe_details.title}','${recipe_details.servings}','${recipe_details.time}','${recipe_details.image}',   
+      '${recipe_details.instructions}','${recipe_details.gluten}','${recipe_details.vegan}','${recipe_details.vegetarian}')`
+    );
+    await DButils.commit();
+
+    let recipes_id = [];
+    recipes_id = await DButils.execQuery(`SELECT MAX(recipe_id) as recipe_id from myrecipes`);
+
+    await recipe_details.ingredients.map((element) => DButils.execQuery(
+        `INSERT INTO ingredients VALUES ('${recipe_details.user_id}','${"P"+recipes_id[0].recipe_id}', '${element.name}','${element.amount}')`
+    ));
+    await DButils.commit();
+    return recipe_details;
+    // res.status(201).send({ message: "Your new recipe has been successfully created", success: true });
+} 
+ 
+
+
 exports.markAsFavorite = markAsFavorite;
 exports.markAsWatched = markAsWatched;
 exports.getFavoriteRecipes = getFavoriteRecipes;
@@ -100,6 +129,6 @@ exports.checkIfWatched = checkIfWatched;
 exports.getlastseenRecipes = getlastseenRecipes;
 exports.getFamilyRecipes = getFamilyRecipes;
 exports.insertFamilyRecipe = insertFamilyRecipe;
-
+exports.createNewRecipes = createNewRecipes;
 
 

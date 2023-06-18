@@ -137,15 +137,38 @@ router.post('/familyRecipes', async (req,res,next) => { //this function will add
 
 
 // ~!!!!!!!!!!!!!!!!!!!!!!!!!!
-router.post('/createRecipe', async (req,res,next) => { //this function will add a new personal recipe of logged in user
-  try{
+//this function will add a new personal recipe of logged in user
+router.post("/CreateRecipe", async (req, res, next) => {
+  try {
+    let recipe_details = {
+      user_id: req.session.user_id,
+      image: req.body.image,
+      title: req.body.title,
+      time: req.body.time ,
+      // likes: req.body.likes,
+      gluten: req.body.gluten,
+      instructions: req.body.instructions,
+      servings: req.body.servings,
+      vegan: req.body.vegan,
+      vegetarian: req.body.vegetarian,
+      ingredients: req.body.ingredients
+    }
+
+    const newRecipeToCreate = await user_utils.createNewRecipes(recipe_details);
     
+    res.status(201).send({ message: "Your new recipe has been successfully created", success: true });
+
   }
   catch(error){
     next(error)
   }
 
-})
+});
+
+
+
+
+
 
 
 module.exports = router;
