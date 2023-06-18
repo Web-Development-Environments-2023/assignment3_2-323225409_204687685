@@ -3,12 +3,14 @@ info:
   title: Recipes api
   description: API for recipes project
   version: 1.0.1
+
 servers:
 # local:
 - url: "http://127.0.0.1:3000"
 # remote:
 # - url: "http://132.72.65.211"
   description: SwaggerHub API Auto Mocking hey
+
 tags:
 - name: Auth
   description: All authentication related routes
@@ -16,6 +18,7 @@ tags:
   description: All the user's personal app info
 - name: Recipes
   description: All reciepes general info
+  
 paths:
   /register:
     post:
