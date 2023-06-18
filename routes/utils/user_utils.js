@@ -116,7 +116,6 @@ async function createNewRecipes(recipe_details){
     ));
     await DButils.commit();
     return recipe_details;
-    // res.status(201).send({ message: "Your new recipe has been successfully created", success: true });
 } 
  
 
