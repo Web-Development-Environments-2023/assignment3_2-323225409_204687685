@@ -167,7 +167,14 @@ router.post("/CreateRecipe", async (req, res, next) => {
 
 
 
-
+router.get('/lastSearch', async (req,res,next) => {
+  try{
+    const lastSearch = req.session.lastSearch;
+    res.status(200).send(lastSearch);
+  } catch(error){
+    next(error); 
+  }
+});
 
 
 

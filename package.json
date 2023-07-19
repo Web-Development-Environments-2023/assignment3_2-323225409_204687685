@@ -12,6 +12,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "bcrypt": "^4.0.1",
+    "bootstrap-vue": "^2.23.1",
     "client-sessions": "^0.8.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -23,7 +24,9 @@
     "mssql": "^6.2.0",
     "mysql2": "^3.3.2",
     "nodemon": "^2.0.4",
-    "pg": "^8.2.1"
+    "pg": "^8.2.1",
+    "vue": "^2.7.14",
+    "vue-scroll-fixed-navbar": "^0.2.2"
   },
   "devDependencies": {
     "mysql": "^2.18.1"
