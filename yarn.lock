@@ -86,6 +86,13 @@
   dependencies:
     "@types/node" "*"
 
+"@types/vuelidate@^0.7.18":
+  version "0.7.18"
+  resolved "https://registry.npmjs.org/@types/vuelidate/-/vuelidate-0.7.18.tgz"
+  integrity sha512-4+QXjFPyd/XDug4t81ag58v6FyNBiIiFGJDYitflGCKq20Jucr2UAu+RHs+vDU5YVpPeIXWLcoxDnKIiY4YOgA==
+  dependencies:
+    vue "^2.6.11"
+
 "@vue/compiler-sfc@2.7.14":
   version "2.7.14"
   resolved "https://registry.npmjs.org/@vue/compiler-sfc/-/compiler-sfc-2.7.14.tgz"

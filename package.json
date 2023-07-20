@@ -29,6 +29,7 @@
     "vue-scroll-fixed-navbar": "^0.2.2"
   },
   "devDependencies": {
+    "@types/vuelidate": "^0.7.18",
     "mysql": "^2.18.1"
   }
 }

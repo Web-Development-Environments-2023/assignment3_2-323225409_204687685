@@ -9,7 +9,7 @@ const DButils = require("../routes/utils/DButils");
 const user_utils = require("./utils/user_utils");
 const recipe_utils = require("./utils/recipes_utils");
 
-router.get("/", (req, res) => res.send("im in user"));
+// router.get("/", (req, res) => res.send("im in user"));
 /**
  * Authenticate all incoming requests by middleware
  */
@@ -142,15 +142,15 @@ router.post("/CreateRecipe", async (req, res, next) => {
   try {
     let recipe_details = {
       user_id: req.session.user_id,
-      image: req.body.image,
       title: req.body.title,
-      time: req.body.time ,
-      // likes: req.body.likes,
-      gluten: req.body.gluten,
-      instructions: req.body.instructions,
-      servings: req.body.servings,
+      time: req.body.readyInMinutes ,
+      image: req.body.image,
       vegan: req.body.vegan,
       vegetarian: req.body.vegetarian,
+      // likes: req.body.likes,
+      gluten: req.body.glutenFree,
+      instructions: req.body.instructions,
+      servings: req.body.servings,
       ingredients: req.body.ingredients
     }
 
@@ -165,16 +165,25 @@ router.post("/CreateRecipe", async (req, res, next) => {
 
 });
 
-
-
-router.get('/lastSearch', async (req,res,next) => {
+// create the function. needs to get my recipes from DB
+router.get('/myRecipes', async (req,res,next) => {
   try{
-    const lastSearch = req.session.lastSearch;
-    res.status(200).send(lastSearch);
+    const user_id = req.session.user_id;
+    const private_recipes = await user_utils.getPreviewPrivateRecipe(user_id);
+    res.status(200).send(private_recipes);
   } catch(error){
     next(error); 
   }
 });
+
+// router.get('/lastSearch', async (req,res,next) => {
+//   try{
+//     const lastSearch = req.session.lastSearch;
+//     res.status(200).send(lastSearch);
+//   } catch(error){
+//     next(error); 
+//   }
+// });
 
 
 
