@@ -169,7 +169,7 @@ router.post("/CreateRecipe", async (req, res, next) => {
 router.get('/myRecipes', async (req,res,next) => {
   try{
     const user_id = req.session.user_id;
-    const private_recipes = await user_utils.getPreviewPrivateRecipe(user_id);
+    const private_recipes = await user_utils.getMyRecipes(user_id);
     res.status(200).send(private_recipes);
   } catch(error){
     next(error); 

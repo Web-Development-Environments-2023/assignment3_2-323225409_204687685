@@ -120,6 +120,29 @@ async function createNewRecipes(recipe_details){
  
 
 
+async function getMyRecipes(user_id){ //get all family recipes of logged in given user
+   
+    let myRecipsList = [];
+    query = `SELECT * FROM myrecipes WHERE user_id='${user_id}'`;
+
+    myRecipsList = await DButils.execQuery(query);
+
+    for (const recipe of myRecipsList) {
+        let ingredientsQuery = `SELECT name, amount FROM ingredients WHERE user_id='${user_id}' AND recipe_id='${recipe.recipe_id}'`;
+        let ingredientsList = await DButils.execQuery(ingredientsQuery);
+        recipe.ingredients = ingredientsList;
+    }
+
+    return myRecipsList;
+}
+
+
+
+
+
+
+
+exports.getMyRecipes = getMyRecipes;
 exports.markAsFavorite = markAsFavorite;
 exports.markAsWatched = markAsWatched;
 exports.getFavoriteRecipes = getFavoriteRecipes;
