@@ -17,7 +17,6 @@ const recipe_utils = require("./recipes_utils");
 
 
 async function getRecipeInformation(recipe_id) {
-  console.log("im here")//get the recipes information from the spooncular api
     return await axios.get(`${api_domain}/${recipe_id}/information`, {
         params: {
             includeNutrition: false,
@@ -139,7 +138,7 @@ async function getTotalRecipeInfo(userId, recipeId) {
         if_recipe_watched_by_user:if_recipe_watched_by_user, //???????????????
         servings:servings,
         instructions: analyzedInstructions,
-        extendedIngredients: recipe_ingredients_list
+        ingredients: recipe_ingredients_list
        
     }
 }
