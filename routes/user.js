@@ -143,12 +143,12 @@ router.post("/CreateRecipe", async (req, res, next) => {
     let recipe_details = {
       user_id: req.session.user_id,
       title: req.body.title,
-      time: req.body.readyInMinutes ,
+      readyInMinutes: req.body.readyInMinutes ,
       image: req.body.image,
       vegan: req.body.vegan,
       vegetarian: req.body.vegetarian,
       // likes: req.body.likes,
-      gluten: req.body.glutenFree,
+      glutenFree: req.body.glutenFree,
       instructions: req.body.instructions,
       servings: req.body.servings,
       ingredients: req.body.ingredients

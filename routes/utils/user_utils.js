@@ -96,15 +96,15 @@ async function insertFamilyRecipe(recipe_details){
 async function createNewRecipes(recipe_details){
 
     let recipes_names_list = [];
-    recipes_names_list = await DButils.execQuery("SELECT recipe_name from myrecipes");
+    recipes_names_list = await DButils.execQuery("SELECT title from myrecipes");
     if (recipes_names_list.find((x) => x.title === recipe_details.title))
       throw { status: 409, message: "This recipe already exist" };
 
     //we add the new recipe to our DB - the recipe will show on myrecipes page
     await DButils.execQuery(
-      `INSERT INTO myrecipes(user_id,recipe_name,servings,time,image,instructions,gluten,vegan,vegetarian) VALUES 
-      ( '${recipe_details.user_id}','${recipe_details.title}','${recipe_details.servings}','${recipe_details.time}','${recipe_details.image}',   
-      '${recipe_details.instructions}','${recipe_details.gluten}','${recipe_details.vegan}','${recipe_details.vegetarian}')`
+      `INSERT INTO myrecipes(user_id,title,servings,readyInMinutes,image,instructions,glutenFree,vegan,vegetarian) VALUES 
+      ( '${recipe_details.user_id}','${recipe_details.title}','${recipe_details.servings}','${recipe_details.readyInMinutes}','${recipe_details.image}',   
+      '${recipe_details.instructions}','${recipe_details.glutenFree}','${recipe_details.vegan}','${recipe_details.vegetarian}')`
     );
     await DButils.commit();
 
