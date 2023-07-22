@@ -109,7 +109,7 @@ async function createNewRecipes(recipe_details){
     await DButils.commit();
 
     let recipes_id = [];
-    recipes_id = await DButils.execQuery(`SELECT MAX(recipe_id) as recipe_id from myrecipes`);
+    recipes_id = await DButils.execQuery(`SELECT MAX(id) as recipe_id from myrecipes`);
 
     await recipe_details.ingredients.map((element) => DButils.execQuery(
         `INSERT INTO ingredients VALUES ('${recipe_details.user_id}','${"P"+recipes_id[0].recipe_id}', '${element.name}','${element.amount}')`
@@ -139,7 +139,21 @@ async function getMyRecipes(user_id){ //get all family recipes of logged in give
 
 
 
+async function getFullMyRecipe(user_id, recipe_id){ //show my recipe of logged in given user
+   
+    let myRecipe;
+    query = `SELECT * FROM myrecipes WHERE user_id='${user_id}' AND id='${recipe_id}' `;
 
+    myRecipe = await DButils.execQuery(query);
+
+    
+    let ingredientsQuery = `SELECT name, amount FROM ingredients WHERE user_id='${user_id}' AND recipe_id='${"P"+recipe_id}'`;
+    let ingredientsList = await DButils.execQuery(ingredientsQuery);
+    // console.log(ingredientsList);
+    myRecipe[0].ingredients = ingredientsList;
+
+    return myRecipe;
+}
 
 
 exports.getMyRecipes = getMyRecipes;
@@ -152,5 +166,6 @@ exports.getlastseenRecipes = getlastseenRecipes;
 exports.getFamilyRecipes = getFamilyRecipes;
 exports.insertFamilyRecipe = insertFamilyRecipe;
 exports.createNewRecipes = createNewRecipes;
+exports.getFullMyRecipe = getFullMyRecipe;
 
 

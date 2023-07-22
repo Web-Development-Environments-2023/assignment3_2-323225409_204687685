@@ -176,6 +176,22 @@ router.get('/myRecipes', async (req,res,next) => {
   }
 });
 
+
+
+
+
+router.get('/myRecipes/fullRecipe/:recipeId', async (req,res,next) => {
+  try{
+    const user_id = req.session.user_id;
+    const myRecipe = await user_utils.getFullMyRecipe(user_id, req.params.recipeId);
+    res.status(200).send(myRecipe);
+  } catch(error){
+    next(error); 
+  }
+});
+
+
+
 // router.get('/lastSearch', async (req,res,next) => {
 //   try{
 //     const lastSearch = req.session.lastSearch;
