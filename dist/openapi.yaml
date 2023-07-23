@@ -3,12 +3,20 @@ info:
   title: Recipes api
   description: API for recipes project
   version: 1.0.1
+  contact:
+    email: ayelem@post.bgu.ac.il
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+
 servers:
+- url: https://virtserver.swaggerhub.com/AYELEM_1/Recipes/1.0.0
+  description: SwaggerHub API Auto Mocking
 # local:
 - url: "http://127.0.0.1:3000"
 # remote:
 # - url: "http://132.72.65.211"
   description: SwaggerHub API Auto Mocking hey
+
 tags:
 - name: Auth
   description: All authentication related routes
@@ -16,8 +24,9 @@ tags:
   description: All the user's personal app info
 - name: Recipes
   description: All reciepes general info
+  
 paths:
-  /register:
+  /Register:
     post:
       tags:
       - Auth
@@ -35,7 +44,7 @@ paths:
           description: A new user has been added
         "400":
           description: wrong input parameters
-  /login:
+  /Login:
     post:
       tags:
       - Auth
@@ -45,7 +54,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginScheme'
+              $ref: '#/components/schemas/Login'
         required: true
       responses:
         "200":
@@ -60,7 +69,7 @@ paths:
                 example: session=87s97sdhgf279293f8w0e9
         "401":
           description: Authentication failed
-  /logout:
+  /Logout:
     post:
       tags:
         - Auth
@@ -97,6 +106,8 @@ paths:
           application/json:
             schema:
               type: object
+              items:
+                $ref: '#/components/schemas/RecipePreview'
               properties:
                 reciepeId:
                   type: string
@@ -133,6 +144,76 @@ paths:
                 $ref: '#/components/schemas/RecipePreview'
         "404":
           description: recipeId is not exists
+  /recipes/random3recipes:
+    get:
+        tags:
+        - Recipes
+        summary: get 3 random recipes from recipes API
+        description: data about the recipe
+        responses:
+          '200':
+            description: A list of a recipes
+            content:
+              application/json:
+                schema:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/RecipePreview'
+          '401':
+            description: recipeId is not exists
+
+  /recipes/searchRecipes:
+    get:
+      tags:
+      - Recipes
+      summary: all the details from user to make a search
+      description: json that contains all the details about the existing recipes
+      parameters:
+        - in: query
+          name: Recipes name
+          description: Recipes name that the user want to search, the user can filter by cuisine, diet and 
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: number of recipes that will be shown to user
+          description:  5 10 15 shown recipes - 5 is the default 
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 5
+        - in: query
+          name: Recipes diet
+          description: diet categories - user can filter by 
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: Recipes cuisine
+          description: cuisine categories - user can filter by
+          required: false
+          schema:
+            type: string 
+        - in: query
+          name: Recipes intolerance
+          description: intolerance categories - user can filter by
+          required: false
+          schema:
+            type: string            
+      operationId: searchRecipes
+      responses:
+        '200':
+          description: list of recipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DetailRecipe'
+        '400':
+          description: bad input parameter 
+
 components:
   schemas:
     User:
@@ -175,7 +256,7 @@ components:
         #   description: URL for the user's image
         #   example: https://cloudinary.com/
       description: Model containing user info
-    LoginScheme:
+    Login:
       type: object
       properties:
         username:
