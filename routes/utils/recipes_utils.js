@@ -104,8 +104,7 @@ async function getRecipesPreview(recipesIdsList, userId) {//gets the recipe prev
 async function getTotalRecipeInfo(userId, recipeId) {
 
     let all_recipe_info = await getRecipeInformation(recipeId);
-    console.log(all_recipe_info)
-
+    
     let { //save from API all the needed info for the recipe 
         
           id,
